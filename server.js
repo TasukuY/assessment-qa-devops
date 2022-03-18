@@ -72,9 +72,11 @@ app.post('/api/duel', (req, res) => {
         // comparing the total health to determine a winner
         if (compHealthAfterAttack > playerHealthAfterAttack) {
             playerRecord.losses++
+            rollbar.log('Player lost')
             res.status(200).send('You lost!')
         } else {
-            playerRecord.losses++
+            playerRecord.wins++
+            rollbar.log('Player won')
             res.status(200).send('You won!')
         }
     } catch (error) {
@@ -86,6 +88,7 @@ app.post('/api/duel', (req, res) => {
 
 app.get('/api/player', (req, res) => {
     try {
+        rollbar.log('Player stats sent');
         res.status(200).send(playerRecord)
     } catch (error) {
         rollbar.error('ERROR GETTING PLAYER STATS');
